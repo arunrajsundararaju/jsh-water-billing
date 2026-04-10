@@ -75,5 +75,47 @@ def main():
         c = int(curr_readings.get(unit, 0))
         print(f"  {unit:<15} {p:>8,} -> {c:>8,} = {c - p:>6,} units")
 
+    # Calculate consumption for each individual apartment
+    records = []
+    for unit in individual_units:
+        prev = prev_readings.get(unit)
+        curr = curr_readings.get(unit)
+        if prev is None or curr is None or pd.isna(prev) or pd.isna(curr):
+            print(f"  WARNING: Missing reading for {unit}, skipping.")
+            continue
+        consumption = int(curr - prev)
+        if consumption < 0:
+            print(f"  WARNING: Negative consumption for {unit} ({prev} -> {curr}), treating as 0.")
+            consumption = 0
+        records.append((unit, int(prev), int(curr), consumption))
+ 
+    # Calculate rate
+    total_consumption = sum(r[3] for r in records)
+    if total_consumption == 0:
+        print("ERROR: Total consumption is zero. Cannot calculate rate.")
+        sys.exit(1)
+    rate = total_charges / total_consumption
+ 
+    # Print summary
+    print("=" * 65)
+    print(f"  Total charges    : Rs. {total_charges:,.2f}")
+    print(f"  Total consumption: {total_consumption:,} units")
+    print(f"  Apartments       : {len(records)}")
+    print(f"  Rate per unit    : Rs. {rate:.4f}")
+    print("=" * 65)
+ 
+    # Print apartment breakdown
+    print(f"\n  {'Unit':<12} {'Prev':>10} {'Curr':>10} {'Units':>8} {'Amount':>12}")
+    print("  " + "-" * 54)
+    total_amount = 0
+    for unit, prev, curr, consumption in records:
+        amount = consumption * rate
+        total_amount += amount
+        print(f"  {unit:<12} {prev:>10,} {curr:>10,} {consumption:>8,} {amount:>12,.2f}")
+    print("  " + "-" * 54)
+    print(f"  {'TOTAL':<12} {'':>10} {'':>10} {total_consumption:>8,} {total_amount:>12,.2f}")
+ 
+    print(f"\n>>> RATE FOR MYGATE: Rs. {rate:.4f} per unit <<<")
+
 if __name__ == "__main__":
     main()
