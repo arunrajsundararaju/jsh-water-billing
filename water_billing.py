@@ -32,6 +32,20 @@ def main():
     print(f"Current file   : {curr_file}")
     print(f"Total charges  : Rs. {total_charges:,.2f}")
     print(f"Output CSV     : {output_csv}")
+    print()
+
+    prev_readings = read_meter_file(prev_file)
+    curr_readings = read_meter_file(curr_file)
+ 
+    print(f"Loaded {len(prev_readings)} meters from: {prev_file}")
+    print(f"Loaded {len(curr_readings)} meters from: {curr_file}")
+    print()
+    print("Sample readings (first 5):")
+    for i, (unit, reading) in enumerate(prev_readings.items()):
+        if i >= 5:
+            break
+        curr = curr_readings.get(unit, "N/A")
+        print(f"  {unit:<15} Prev: {reading:>10,.0f}   Curr: {curr:>10,.0f}")
 
 if __name__ == "__main__":
     main()

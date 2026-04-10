@@ -1,0 +1,17 @@
+C:\Users\arunr\Downloads\jsh-water-billing>python water_billing.py JS-Jan-2026-Water-Meter-Readings.xlsx JS-Feb-2026-Water-Meter-Readings.xlsx 20000
+Previous file  : JS-Jan-2026-Water-Meter-Readings.xlsx
+Current file   : JS-Feb-2026-Water-Meter-Readings.xlsx
+Total charges  : Rs. 20,000.00
+Output CSV     : Meter_Based_Item_Upload.csv
+
+Loaded 75 meters from: JS-Jan-2026-Water-Meter-Readings.xlsx
+Loaded 75 meters from: JS-Feb-2026-Water-Meter-Readings.xlsx
+
+Sample readings (first 5):
+  A-Common-1      Prev:     91,730   Curr:     97,410
+  A-Common-2      Prev:     55,380   Curr:     55,430
+  A-G1            Prev:    256,220   Curr:    270,360
+  A-G2            Prev:     10,910   Curr:     10,910
+  A-G3            Prev:    283,150   Curr:    297,240
+
+C:\Users\arunr\Downloads\jsh-water-billing>
