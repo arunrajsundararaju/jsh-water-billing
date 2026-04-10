@@ -173,25 +173,17 @@ def main():
     csv_rows = []
     for r in sorted(merged, key=lambda x: x["unit"]):
         if len(r["parts"]) == 1:
-            # Regular apartment - single meter
+            # Regular apartment - no description needed, system generates it
             _, prev, curr, cons = r["parts"][0]
             csv_prev = prev
             csv_curr = curr
-            desc = (
-                f"Rate: Rs.{mygate_rate:.4f}/unit | "
-                f"Prev: {prev:,} | Curr: {curr:,} | "
-                f"Consumption: {cons:,} units"
-            )
+            desc = ""
         else:
-            # Combined unit (B-103/104) - sum prev and curr for CSV fields
+            # Combined unit (B-103/104) - show individual meter breakdown
             csv_prev = sum(p[1] for p in r["parts"])
             csv_curr = sum(p[2] for p in r["parts"])
-            part_details = [f"{name}: {p}->{c}={cons}" for name, p, c, cons in r["parts"]]
-            desc = (
-                f"Rate: Rs.{mygate_rate:.4f}/unit | "
-                f"Total consumption: {r['consumption']:,} units | "
-                + " | ".join(part_details)
-            )
+            part_details = [f"{name}: {p}->{c} ({cons})" for name, p, c, cons in r["parts"]]
+            desc = " | ".join(part_details)
 
         csv_rows.append({
             "Unit Name": r["unit"],
