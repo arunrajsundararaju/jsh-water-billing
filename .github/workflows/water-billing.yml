@@ -1,0 +1,52 @@
+name: Water Billing
+
+on:
+  workflow_dispatch:
+    inputs:
+      prev_file:
+        description: 'Previous month readings filename (in readings/ folder)'
+        required: true
+        type: string
+      curr_file:
+        description: 'Current month readings filename (in readings/ folder)'
+        required: true
+        type: string
+      total_charges:
+        description: 'Total water tanker charges in rupees'
+        required: true
+        type: string
+      output_file:
+        description: 'Output CSV filename (e.g. April_Meter_Based_Item_Upload.csv)'
+        required: false
+        default: 'Meter_Based_Item_Upload.csv'
+        type: string
+
+jobs:
+  generate-bill:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install pandas openpyxl
+
+      - name: Run water billing script
+        run: |
+          python water_billing.py \
+            "readings/${{ inputs.prev_file }}" \
+            "readings/${{ inputs.curr_file }}" \
+            "${{ inputs.total_charges }}" \
+            "${{ inputs.output_file }}"
+
+      - name: Upload CSV as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.output_file }}
+          path: ${{ inputs.output_file }}
