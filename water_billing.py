@@ -195,7 +195,7 @@ def main():
         })
 
     df_out = pd.DataFrame(csv_rows)
-    df_out.to_csv(output_csv, index=False)
+    df_out.to_csv(output_csv, index=False, lineterminator='\r\n')
     print(f"\nMygate CSV written to: {output_csv}")
 
 if __name__ == "__main__":
