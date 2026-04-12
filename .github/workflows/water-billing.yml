@@ -20,10 +20,16 @@ on:
         required: false
         default: 'Meter_Based_Item_Upload.csv'
         type: string
+      release_tag:
+        description: 'Release tag (e.g. 2026-04). Leave blank to skip creating a release.'
+        required: false
+        type: string
 
 jobs:
   generate-bill:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repo
@@ -43,10 +49,26 @@ jobs:
             "readings/${{ inputs.prev_file }}" \
             "readings/${{ inputs.curr_file }}" \
             "${{ inputs.total_charges }}" \
-            "${{ inputs.output_file }}"
+            "${{ inputs.output_file }}" \
+            | tee billing_log.txt
 
       - name: Upload CSV as artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.output_file }}
           path: ${{ inputs.output_file }}
+
+      - name: Create release
+        if: inputs.release_tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          name: Water Bill - ${{ inputs.release_tag }}
+          body: |
+            Water billing for ${{ inputs.release_tag }}
+            - Previous: ${{ inputs.prev_file }}
+            - Current: ${{ inputs.curr_file }}
+            - Total charges: Rs. ${{ inputs.total_charges }}
+          files: |
+            ${{ inputs.output_file }}
+            billing_log.txt

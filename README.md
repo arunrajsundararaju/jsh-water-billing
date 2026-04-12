@@ -21,11 +21,14 @@ readings/JS-Feb-2026-Water-Meter-Readings.xlsx
   - **Current month filename**: e.g. `JS-Feb-2026-Water-Meter-Readings.xlsx`
   - **Total charges**: e.g. `20000`
   - **Output filename** (optional): e.g. `April_Meter_Based_Item_Upload.csv` (defaults to `Meter_Based_Item_Upload.csv`)
+  - **Release tag** (optional): e.g. `2026-04` to create a permanent release. Leave blank to skip.
 - Click **Run workflow**
 
 ### 3. Download the output
 
 Once the workflow completes, click on the run and download the `Meter_Based_Item_Upload` artifact. This contains the CSV to upload to Mygate.
+
+If you provided a release tag, the CSV is also available permanently under **Releases** — anyone with the repo link can download it.
 
 The workflow logs will also show the rate to manually enter in Mygate.
 
